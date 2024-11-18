@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>สมัครค่ายพัฒนาการเข้าสังคม</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-4 text-center">สมัครค่ายพัฒนาการเข้าสังคม</h1>
+    <form id="registerForm" class="space-y-4">
+      <div>
+        <label for="studentID" class="block text-gray-700 font-bold">รหัสนักศึกษา</label>
+        <input type="text" id="studentID" name="studentID" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200">
+      </div>
+      <div>
+        <label for="fullName" class="block text-gray-700 font-bold">ชื่อ-นามสกุล</label>
+        <input type="text" id="fullName" name="fullName" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200">
+      </div>
+      <div>
+        <label for="year" class="block text-gray-700 font-bold">ชั้นปี</label>
+        <select id="year" name="year" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200">
+          <option value="ปี 1">ปี 1</option>
+          <option value="ปี 2">ปี 2</option>
+          <option value="ปี 3">ปี 3</option>
+          <option value="ปี 4">ปี 4</option>
+        </select>
+      </div>
+      <div>
+        <label for="faculty" class="block text-gray-700 font-bold">สังกัดคณะ/วิทยาลัย</label>
+        <select id="faculty" name="faculty" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200">
+          <option value="วิทยาศาสตร์">วิทยาศาสตร์</option>
+          <option value="วิศวกรรมศาสตร์">วิศวกรรมศาสตร์</option>
+          <option value="เกษตรศาสตร์">เกษตรศาสตร์</option>
+          <option value="เภสัชศาสตร์">เภสัชศาสตร์</option>
+          <option value="พยาบาลศาสตร์">พยาบาลศาสตร์</option>
+          <option value="วิทยาลัยแพทยศาสตร์และการสาธารณสุข">วิทยาลัยแพทยศาสตร์และการสาธารณสุข</option>
+          <option value="นิติศาสตร์">นิติศาสตร์</option>
+          <option value="รัฐศาสตร์">รัฐศาสตร์</option>
+          <option value="บริหารศาสตร์">บริหารศาสตร์</option>
+          <option value="ศิลปศาสตร์">ศิลปศาสตร์</option>
+          <option value="ศิลปประยุกต์และสถาปัตยกรรมศาสตร์">ศิลปประยุกต์และสถาปัตยกรรมศาสตร์</option>
+          <option value="ศึกษาศาสตร์">ศึกษาศาสตร์</option>
+        </select>
+      </div>
+      <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded w-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+        สมัคร
+      </button>
+    </form>
+    <div id="message" class="hidden text-center mt-4 font-bold"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("registerForm");
+    const messageDiv = document.getElementById("message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        studentID: form.studentID.value,
+        fullName: form.fullName.value,
+        year: form.year.value,
+        faculty: form.faculty.value,
+      };
+
+      try {
+        const response = await fetch("https://script.google.com/a/macros/ubu.ac.th/s/AKfycbwNg5yGAGXxvV8n7OLnz2D2I-h_sFZVnyz91iEp8biR0VHiT2fBYQFTTQLUKbVHCIe6_A/exec", {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const result = await response.json();
+        if (result.status === "success") {
+          messageDiv.textContent = "สมัครสำเร็จ!";
+          messageDiv.classList.remove("hidden", "text-red-600");
+          messageDiv.classList.add("text-green-600");
+          form.reset();
+        } else {
+          throw new Error(result.message || "เกิดข้อผิดพลาด");
+        }
+      } catch (error) {
+        messageDiv.textContent = error.message;
+        messageDiv.classList.remove("hidden", "text-green-600");
+        messageDiv.classList.add("text-red-600");
+      }
+    });
+  </script>
+</body>
+</html>
